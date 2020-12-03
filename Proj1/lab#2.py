@@ -1,7 +1,11 @@
 # lab 2
 
-
-
+import datetime
+import csv 
+import os
+from  itertools import chain
+from Tkinter import Tk     # from tkinter import Tk for Python 3.x
+from tkinter.filedialog import askopenfilename
 
 '''
 
@@ -99,8 +103,7 @@ if choice == "Honda":
 ######
             
 '''
-import csv 
-import os
+
 
 '''
 Header = ["Brand", "Model", "Year", "Body Type", "Price"]    
@@ -207,8 +210,8 @@ with open ("InApp.csv", "w") as a:
     writer.writerow(header)
     writer.writerows(transactionsApp)
 
-'''
 
+'''
 def fileReader(file):
     resList = []
     with open(file) as f:
@@ -226,45 +229,89 @@ def autoSum(rawData):
             continue
         if i < length-2:
             if rawData [i][0] == rawData [i+1][0]:
-                sum = sum + int(rawData [i][2])
+                sum = sum + float(rawData [i][2])
             else:
-                sum = sum + int(rawData [i][2])
+                sum = sum + float(rawData [i][2])
                 resList.append ([rawData[i][0], sum])
                 sum = 0
         else:
-            sum = sum + int(rawData [i][2])
+            sum = sum + float(rawData [i][2])
             resList.append ([rawData[i][0], sum])
             
     return resList
       
-             
+
     
 #function to sort raw data list by first element of the table
 def sortByDate(elem):
     return elem[0]
 
+#this function compares two sets of data for dates and total transaction values
+#and validates matches vs inconsistencies
+def dataMatch (collapsedDataBankSatatement, collapsedInApp):
+    resList = []
+    resList.append(["Date", "Result"])
+    for date in collapsedDataBankSatatement:
+        for dateInApp in collapsedInApp:
+            if date[0] == dateInApp[0]:
+                if date[1] == dateInApp[1]:
+                    resList.append([date[0], "Ok"])
+                    break
+                else:
+                    resList.append([date[0], date[1] - dateInApp[1]])
+                    break                
+#implementing edge case (no date is found) in Bank Statement 
+    for dateInApp in collapsedInApp:
+        elem_to_find = dateInApp[0]
+        res1 = elem_to_find in chain(*collapsedDataBankSatatement)
+        if not res1:
+            resList.append ([dateInApp[0], "Date not found on the Bank Statement"])
+#implementing edge case (no date is found) in App       
+    for date in collapsedDataBankSatatement:
+        elem_to_find = date[0]
+        res1 = elem_to_find in chain(*collapsedInApp)
+        if not res1:
+            resList.append ([date[0], "Date not found In App"])    
+    return resList
+
+                    
+print ("Started")
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+filename = askopenfilename(title = "Select Bank Statement file",filetypes = [("CSV files","*.csv")]) # show an "Open" dialog box and return the path to the selected file
+print (filename)
+
 #read raw data from files and input it into the list
-rawDataBankStatement = fileReader("Bank Statement.csv")
-rawDataInApp = fileReader ("InApp.csv")
+rawDataBankStatement = fileReader (filename)
+
+print ("Started second file")
+
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+filename = askopenfilename(title = "Select In App file",filetypes = [("CSV files","*.csv")]) # show an "Open" dialog box and return the path to the selected file
+print (filename)
+
+rawDataInApp = fileReader (filename)
+
+
 
 #sorting raw data by "date" column
 rawDataBankStatement.sort(key=sortByDate)
 rawDataInApp.sort(key=sortByDate)
 
-'''
-#length = len(rawDataBankStatement)
-SYMBOLS = "$"
-for i in range(length):
-    if i != 0:
-        rawDataBankStatement[i][2].replace('$','')
+
    
-'''
 
-
+#colliding dates and summing transaction values for both files
 collapsedDataBankSatatement = autoSum(rawDataBankStatement)
-print(collapsedDataBankSatatement)
+collapsedInApp = autoSum(rawDataInApp)
+#print(collapsedDataBankSatatement)
 
+resList = dataMatch (collapsedDataBankSatatement, collapsedInApp)
 
-
+#write result to 
+current_date = datetime.datetime.now()
+with open ('Result {}.csv'.format(current_date), "w") as f:   
+    writer = csv.writer(f)
+    writer.writerows(resList)
+    
 
 
