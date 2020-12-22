@@ -1,0 +1,3 @@
+([('ReconciliationTool',
+   '/Users/yura/Workspace/MyLabRepo/Proj1/dist/ReconciliationTool',
+   'EXECUTABLE')],)

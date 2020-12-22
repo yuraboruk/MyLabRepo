@@ -1,0 +1,14 @@
+Date,Result
+2020-11-24,Ok
+2020-11-25,-9.0
+2020-11-26,10.0
+2021-10-26,Date not found on the Bank Statement
+""
+Duplicates found in both App files
+""
+Transaction,Date in Old App,Date in New App,Amount
+PayPal,2020-11-24,2020-11-24,100
+Contractor,2020-11-18,2020-11-24,50.00
+LOL,2021-10-16,2020-11-25,10
+Meal,2020-11-16,2020-11-26,20
+LOL,2021-10-16,2021-10-26,10
