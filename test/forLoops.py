@@ -27,7 +27,7 @@ for i in range(1, 13):
 root = int(input("Please input the root of your tree? "))
 
 
-branches = input("Enter multiple numbers space-separated:- ")
+branches = int(input("Enter multiple numbers space-separated:- ")
 # spliting the data
 branches = branches.split()
 print branches

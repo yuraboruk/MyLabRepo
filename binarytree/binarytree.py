@@ -44,7 +44,7 @@ class Node:
     def PrintTree(self):
         if self.left:
             self.left.PrintTree()
-        print( self.data),
+        print(self.data),
         if self.right:
             self.right.PrintTree()
             
@@ -84,3 +84,5 @@ root.PrintTree()
 print ("Num Level = " + str(numLevels))
 
 print (str(2**numLevels))
+
+print (str(root.maxlevel))
