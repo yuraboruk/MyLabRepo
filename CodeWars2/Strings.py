@@ -1,0 +1,1 @@
+print("Learn {0} programming".format("Python"))
